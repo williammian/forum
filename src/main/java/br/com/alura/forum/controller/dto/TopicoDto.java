@@ -9,8 +9,11 @@ import br.com.alura.forum.modelo.Topico;
 public class TopicoDto {
 	
 	private Long id;
+	
 	private String titulo;
+	
 	private String mensagem;
+	
 	private LocalDateTime dataCriacao;
 	
 	public TopicoDto(Topico topico) {
