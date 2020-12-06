@@ -18,6 +18,8 @@ localhost:8080/topicos?pagina=0&qtd=3&ordenacao=id
 
 -----------------------------------------------------
 
+@EnableSpringDataWebSupport //anotação no main
+
 @GetMapping
 public Page<TopicoDto> lista(@RequestParam(required = false) String nomeCurso,
 		@PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable paginacao) {
