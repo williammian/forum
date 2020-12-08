@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
@@ -26,11 +27,33 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	//Configuracoes de autorizacao (urls, quem pode acessar url, perfil de acesso)
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
+		http
+		.authorizeRequests()
 		.antMatchers(HttpMethod.GET , "/topicos").permitAll()
 		.antMatchers(HttpMethod.GET , "/topicos/*").permitAll()
 		.anyRequest().authenticated()
 		.and().formLogin();
+
+//----------------------------------------------------------------------------------------------
+//		Autenticação Basic
+//
+//		http
+//		.authorizeRequests()
+//		.anyRequest().authenticated()
+//		.and()
+//		.httpBasic()
+//		.and()
+//		.sessionManagement()
+//		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//		.and()
+//		.csrf().disable();
+//		
+//		https://www.base64encode.org/   encode   aluno@email.com:123456   YWx1bm9AZW1haWwuY29tOjEyMzQ1Ng==
+//
+//		Exemplo requisição:
+//		curl -H "Authorization: Basic YWx1bm9AZW1haWwuY29tOjEyMzQ1Ng==" http://localhost:8080/topicos
+//---------------------------------------------------------------------------------------------------------
+		
 	}
 	
 	//Configuracoes de recursos estaticos (arquivos css, js, imagens, etc) se view integrado com spring (jsp, thymeleaf, etc)
