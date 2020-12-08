@@ -31,8 +31,10 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 		.antMatchers(HttpMethod.GET , "/topicos").permitAll()
 		.antMatchers(HttpMethod.GET , "/topicos/*").permitAll()
+		.antMatchers(HttpMethod.POST , "/auth").permitAll()
 		.anyRequest().authenticated()
-		.and().formLogin();
+		.and().csrf().disable()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 //----------------------------------------------------------------------------------------------
 //		Autenticação Basic
