@@ -9,7 +9,10 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import br.com.alura.forum.modelo.Usuario;
 
 @Profile("basic-security")
 @EnableWebSecurity
@@ -46,6 +49,11 @@ public class BasicSecurityConfigurations extends WebSecurityConfigurerAdapter {
 //
 //		Exemplo requisição:
 //		curl -H "Authorization: Basic YWx1bm9AZW1haWwuY29tOjEyMzQ1Ng==" http://localhost:8080/topicos
+//
+//		Obtendo usuário logado
+//		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//		String username = ((Usuario)principal).getEmail();
+//		
 //---------------------------------------------------------------------------------------------------------
 		
 	}
