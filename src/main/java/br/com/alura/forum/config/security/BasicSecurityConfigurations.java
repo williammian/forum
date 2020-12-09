@@ -3,7 +3,6 @@ package br.com.alura.forum.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -12,10 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Profile("oauth-security")
+@Profile("basic-security")
 @EnableWebSecurity
 @Configuration
-public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
+public class BasicSecurityConfigurations extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private AutenticacaoService autenticacaoService;
@@ -29,14 +28,26 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	//Configuracoes de autorizacao (urls, quem pode acessar url, perfil de acesso)
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+//----------------------------------------------------------------------------------------------
+//		Autenticação Basic
+//
 		http
 		.authorizeRequests()
-		.antMatchers(HttpMethod.GET , "/topicos").permitAll()
-		.antMatchers(HttpMethod.GET , "/topicos/*").permitAll()
-		.antMatchers(HttpMethod.POST , "/auth").permitAll()
 		.anyRequest().authenticated()
-		.and().csrf().disable()
-		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);		
+		.and()
+		.httpBasic()
+		.and()
+		.sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and()
+		.csrf().disable();
+//		
+//		https://www.base64encode.org/   encode   aluno@email.com:123456   YWx1bm9AZW1haWwuY29tOjEyMzQ1Ng==
+//
+//		Exemplo requisição:
+//		curl -H "Authorization: Basic YWx1bm9AZW1haWwuY29tOjEyMzQ1Ng==" http://localhost:8080/topicos
+//---------------------------------------------------------------------------------------------------------
+		
 	}
 	
 	//Configuracoes de recursos estaticos (arquivos css, js, imagens, etc) se view integrado com spring (jsp, thymeleaf, etc)
