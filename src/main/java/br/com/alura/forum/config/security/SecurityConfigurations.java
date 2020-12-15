@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,7 +20,6 @@ import br.com.alura.forum.repository.UsuarioRepository;
 @Profile("bearer-security")
 @EnableWebSecurity
 @Configuration
-@Order(2) //esta classe será carregada depois da ActuatorSecurityConfigurations
 public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
@@ -53,7 +51,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.GET , "/topicos").permitAll()
 		.antMatchers(HttpMethod.GET , "/topicos/*").permitAll()
 		.antMatchers(HttpMethod.POST , "/auth").permitAll()
-		//.antMatchers(HttpMethod.GET , "/actuator/**").permitAll() remover esta linha para adicionar segurança ao utilizar actuator/spring boot admin
+		.antMatchers(HttpMethod.GET , "/actuator/**").permitAll() //remover esta linha para adicionar segurança ao utilizar actuator/spring boot admin
 		.anyRequest().authenticated()
 		.and().csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -63,6 +61,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	//Configuracoes de recursos estaticos (arquivos css, js, imagens, etc) se view integrado com spring (jsp, thymeleaf, etc)
 	@Override
 	public void configure(WebSecurity web) throws Exception {
+		web.ignoring()
+        .antMatchers("/**.html", "/v2/api-docs", "/webjars/**", "/configuration/**", "/swagger-resources/**");
 	}
 
 	public static void main(String[] args) {
