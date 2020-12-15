@@ -1,0 +1,120 @@
+Implementar segurança no endpoint do actuator (tira-lo do .antMatchers) para que somente o projeto do sprint-boot-admin possa consulta-lo
+
+Na classe SecurityConfigurations remover o antMatchers do actuator:
+
+http.authorizeRequests()
+        .antMatchers(HttpMethod.GET, "/topicos").permitAll()
+        .antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
+        .antMatchers(HttpMethod.POST, "/auth").permitAll()
+        .anyRequest().authenticated()
+        .and().csrf().disable()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and().addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, usuarioRepository), UsernamePasswordAuthenticationFilter.class);
+        
+Mas é necessário que os endpoints do actuator tenham segurança, portanto podemos criar outra classe com as regras de segurança especificas do actuator:
+
+@Configuration
+@Order(1)
+public class ActuatorSecurityConfigurations extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+        .withUser("actuator").password(passwordEncoder().encode("actuator123"))
+        .authorities("ROLE_ADMIN");
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+        .antMatchers("/actuator/**").hasRole("ADMIN")
+        .and().httpBasic();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }    
+}
+
+Repare que em cima da classe tem o @Order(1). Isso é para indicar ao Spring que essa classe deve ser carregada antes da classe SecurityConfigurations, que vai precisar ter @Order(2):
+
+@EnableWebSecurity
+@Configuration
+@Order(2)
+public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
+    //resto do codigo...
+    
+
+No application.properties do projeto monitoramento é necessário também ter segurança:
+
+server.port=8081
+
+spring.security.user.name=admin
+spring.security.user.password=admin123
+
+
+E para conseguir fazer login no projeto de monitoramento é necessário adicionar mais 2 dependências no pom.xml do projeto monitoramento:
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>de.codecentric</groupId>
+    <artifactId>spring-boot-admin-server-ui-login</artifactId>
+    <version>1.5.7</version>
+</dependency>
+
+
+E no projeto monitoramento criar a classe SecurityConfigurations:
+
+@Configuration
+public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
+
+    private final String adminContextPath;
+
+    public SecurityConfigurations(AdminServerProperties adminServerProperties) {
+        this.adminContextPath = adminServerProperties.getContextPath();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+        successHandler.setTargetUrlParameter("redirectTo");
+        successHandler.setDefaultTargetUrl(adminContextPath + "/");
+
+        http.authorizeRequests()
+            .antMatchers(adminContextPath + "/assets/**").permitAll()
+            .antMatchers(adminContextPath + "/login").permitAll()
+            .anyRequest().authenticated()
+            .and().formLogin()
+            .loginPage(adminContextPath + "/login").successHandler(successHandler)
+            .and().logout().logoutUrl(adminContextPath + "/logout")
+            .and().httpBasic()
+            .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            .ignoringAntMatchers(adminContextPath + "/instances", adminContextPath + "/actuator/**");
+    }    
+}
+
+
+E por fim, no application properties do projeto forum, adicionar essas configurações:
+
+# spring boot admin server
+spring.boot.admin.client.url=http://localhost:8081
+
+#login/senha do admin-server:
+spring.boot.admin.client.username=admin
+spring.boot.admin.client.password=admin123
+
+#login/senha do client:
+spring.boot.admin.client.instance.metadata.user.name=actuator
+spring.boot.admin.client.instance.metadata.user.password=actuator123
+
+
+Agora ao tentar acessar o endpoint do actuator (http://localhost:8080/actuator) será exigido login/senha: actuator/actuator123
+
+E ao tentar entrar na tela de monitoramento(http://localhost:8081) também será necessário fazer login: admin/admin123
+
+Tudo isso está na documentação do Spring Boot Admin: http://codecentric.github.io/spring-boot-admin/2.1.4/#securing-spring-boot-admin
