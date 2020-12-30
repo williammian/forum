@@ -188,6 +188,14 @@ Para liberar acesso ao Swagger no Spring Security, devemos chamar o seguinte mé
 
 ----------------------------------------------
 
+Para atualizar a versão do Spring Boot na aplicação, basta alterar a tag <version> da tag <parent>, no arquivo pom.xml.
+
+É importante ler as release notes das novas versões do Spring Boot, para identificar possíveis quebras de compatibilidades ao atualizar a aplicação.
+
+É possível restringir o acesso a determinados endpoints da aplicação, de acordo com o perfil do usuário autenticado, utilizando o método hasRole(“NOME_DO_ROLE”) nas configurações de segurança da aplicação.
+
+----------------------------------------------
+
 
 
 

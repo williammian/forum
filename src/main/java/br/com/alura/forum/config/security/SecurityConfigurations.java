@@ -52,6 +52,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.GET , "/topicos/*").permitAll()
 		.antMatchers(HttpMethod.POST , "/auth").permitAll()
 		.antMatchers(HttpMethod.GET , "/actuator/**").permitAll() //remover esta linha para adicionar segurança ao utilizar actuator/spring boot admin
+		.antMatchers(HttpMethod.DELETE , "/topicos/*").hasRole("MODERADOR") 
 		.anyRequest().authenticated()
 		.and().csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
