@@ -198,6 +198,15 @@ Para atualizar a versão do Spring Boot na aplicação, basta alterar a tag <ver
 
 Profiles
 
-Ativar: botão direito no projeto, Run As, Run Configurations, Java Application, ForumApplication, aba Arguments, campo VM Arguments,
+Profiles devem ser utilizados para separar as configurações de cada tipo de ambiente, tais como desenvolvimento, testes e produção.
+
+A anotação @Profile serve para indicar ao Spring que determinada classe deve ser carregada apenas quando determinados profiles estiverem ativos.
+
+É possível alterar o profile ativo da aplicação por meio do parâmetro -Dspring.profiles.active.
+Ativar desse modo: botão direito no projeto, Run As, Run Configurations, Java Application, ForumApplication, aba Arguments, campo VM Arguments,
 -Dspring.profiles.active=dev
+
+Ao não definir um profile para a aplicação, o Spring considera que o profile ativo dela e o profile de nome default.
+
+------------------------------------------------
 
