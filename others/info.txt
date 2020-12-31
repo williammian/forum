@@ -196,6 +196,8 @@ Para atualizar a versão do Spring Boot na aplicação, basta alterar a tag <ver
 
 ----------------------------------------------
 
+Profiles
 
-
+Ativar: botão direito no projeto, Run As, Run Configurations, Java Application, ForumApplication, aba Arguments, campo VM Arguments,
+-Dspring.profiles.active=dev
 

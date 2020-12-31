@@ -18,7 +18,7 @@ import br.com.alura.forum.config.security.TokenService;
 import br.com.alura.forum.controller.dto.TokenDto;
 import br.com.alura.forum.controller.form.LoginForm;
 
-@Profile("bearer-security")
+@Profile("prod")
 @RestController
 @RequestMapping("/auth")
 public class AutenticacaoController {
