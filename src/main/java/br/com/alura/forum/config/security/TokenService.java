@@ -12,7 +12,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-@Profile("bearer-security")
+@Profile(value = {"prod", "test"} )
 @Service
 public class TokenService {
 	
