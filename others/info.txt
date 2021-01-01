@@ -255,3 +255,44 @@ para rodar -> java -jar forum-0.0.1-SNAPSHOT.jar
 
 ------------------------------------------------------
 
+Externalizando senhas com variáveis de ambiente
+
+Exemplo, no application-prod.properties
+
+spring.datasource.url=${FORUM_DATABASE_URL}
+spring.datasource.username=${FORUM_DATABASE_USERNAME}
+spring.datasource.password=${FORUM_DATABASE_PASSWORD}
+
+forum.jwt.secret=${FORUM_JWT_SECRET}
+
+para rodar -> java -jar -Dspring.profiles.active=prod forum.jar
+
+Para preencher as variáveis:
+
+Maneira 1: exportar variável de ambiente na máquina
+exemplo linux/mack
+export FORUM_DATABASE_URL=jdbc:h2:mem:alura-forum-prod
+demais variaveis...
+
+Maneira 2: rodar no próprio comando
+java -jar -Dspring.profiles.active=prod 
+-DFORUM_DATABASE_URL=jdbc:h2:mem:alura-forum 
+-DFORUM_DATABASE_USERNAME=sa 
+-DFORUM_DATABASE_PASSWORD=
+-DFORUM_JWT_SECRET=123456 
+forum.jar
+
+-----------------------------------------------------
+
+Retirando o -0.0.1-SNAPSHOT do nome do jar
+
+no pom.xml, acrescentar a tag
+
+<build>
+		<finalName>forum</finalName>
+		....
+</build>
+
+------------------------------------------------------
+
+
