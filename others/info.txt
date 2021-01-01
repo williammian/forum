@@ -230,3 +230,28 @@ Para conseguir injetar o MockMvc devemos anotar a classe de teste com @AutoConfi
 
 -------------------------------------------------
 
+Deploy
+
+Gerar jar pelo Eclipse
+
+aplicação spring-boot por padrão gera .jar
+
+botão direito do mouse no projeto, Run As, Maven install
+
+ou 
+
+botão direito do mouse no projeto, Run As, Maven build...
+em Goals colocar clean package
+
+ou
+
+pelo prompt de comandos indo até o diretório do projeto
+rodar o comando
+mvn clean package
+
+gera o jar -> forum-0.0.1-SNAPSHOT.jar
+
+para rodar -> java -jar forum-0.0.1-SNAPSHOT.jar
+
+------------------------------------------------------
+
