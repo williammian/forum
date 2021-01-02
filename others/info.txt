@@ -341,3 +341,29 @@ Ao realizar o build, por padrão será criado um arquivo .jar.
 
 -------------------------------------------------------
 
+Gerando imagem Docker da aplicação
+
+Na raiz do projeto, criar o arquivo Dockerfile
+
+FROM openjdk:8-jdk-alpine									# imagem base a ser utilizada
+RUN addgroup -S spring && adduser -S spring -G spring		# criar usuário neste S.O. ao invés de usar usuário root
+USER spring:spring											# usar usuário criado no passo anterior
+ARG JAR_FILE=target/*.jar									# pega o jar gerado pelo build do maven e coloca o nome desse arquivo na variavel
+COPY ${JAR_FILE} app.jar									# copia o jar para o S.O com o nome app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]						# comando a ser executado
+
+Estando na raiz do projeto, comando para o Docker criar a imagem
+
+docker build -t williammian/forum .
+
+-t é para nomear a imagem
+
+ . (espaço ponto) é para pegar o diretório raiz, atual
+ 
+
+Para listar as imagens
+docker image list
+
+----------------------------------------------------------
+
+ 
