@@ -296,4 +296,48 @@ no pom.xml, acrescentar a tag
 
 ------------------------------------------------------
 
+Deploy tradicional com arquivo war
+
+No pom.xml
+
+Depois de <description>Forum da Alura</description>
+colocar a tag
+<packaging>war</packaging>
+
+Em <dependencies>
+Adicionar
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-tomcat</artifactId>
+	<scope>provided</scope>
+</dependency>
+
+Na classe main ForumApplication.java
+
+public class ForumApplication extends SpringBootServletInitializer {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ForumApplication.class, args);
+	}
+	
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+		return builder.sources(ForumApplication.class);
+	}
+
+}
+
+------------------------------------------------------
+
+Resumo Build/Deploy
+
+O build da aplicação é realizado via maven, com o comando mvn clean package.
+
+Ao realizar o build, por padrão será criado um arquivo .jar.
+
+É possível passar parâmetros para as configurações da aplicação via variáveis de ambiente.
+
+É possível alterar o build para criar um arquivo .war, para deploy em servidores de aplicações.
+
+-------------------------------------------------------
 
