@@ -380,4 +380,56 @@ docker run -p 8080:8080 -e SPRING_PROFILES_ACTIVE='prod' -e FORUM_DATABASE_URL='
 
 -----------------------------------------------------------
 
- 
+Deploy no Heroku com Docker
+
+1) Alterar o Dockerfile
+
+FROM openjdk:8-jdk-alpine
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-Xmx512m","-Dserver.port=${PORT}","-jar","/app.jar"]
+
+2) Alterar o application-prod.properties
+No final dele acrescentar a instrução
+
+server.port=${PORT}
+
+3) Criar conta no heroku
+
+4) Instalar o heroku CLI
+
+5) Seguir os passos em 
+https://devcenter.heroku.com/articles/container-registry-and-runtime
+
+Estar no diretório raiz do projeto
+
+Utilizar o prompt de comando
+
+heroku login
+
+heroku container:login
+
+heroku create williammian-forum
+
+heroku git:remote -a williammian-forum
+
+Passar as variáveis de ambiente
+Estando no dashboard do heroku/aplicação, na aba Settings, em Config Vars
+PORT=8080
+SPRING_PROFILES_ACTIVE=prod
+FORUM_DATABASE_URL=jdbc:h2:mem:alura-forum-prod
+FORUM_DATABASE_USERNAME=sa
+FORUM_DATABASE_PASSWORD=
+FORUM_JWT_SECRET=123456
+
+
+heroku container:push web
+
+heroku container:release web
+
+heroku open
+
+------------------------------------------------------------
+
