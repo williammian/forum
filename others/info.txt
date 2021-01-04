@@ -366,4 +366,18 @@ docker image list
 
 ----------------------------------------------------------
 
+Rodando a aplicação via Docker
+
+docker run williammian/forum
+
+Passando variáveis de ambiente
+
+docker run -p 8080:8080 -e SPRING_PROFILES_ACTIVE='prod' -e FORUM_DATABASE_URL='jdbc:h2:mem:alura-forum-prod' -e FORUM_DATABASE_USERNAME='sa' -e FORUM_DATABASE_PASSWORD='' -e FORUM_JWT_SECRET='123456' williammian/forum
+
+-p 8080:8080 para rodar na porta 8080 do container e expor na máquina/host na porta 8080
+
+-e para passar variáveis de ambiente (parâmetros) para o Docker
+
+-----------------------------------------------------------
+
  
